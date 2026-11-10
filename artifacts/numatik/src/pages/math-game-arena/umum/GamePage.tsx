@@ -5633,7 +5633,7 @@ const GamePage = ({
               <button
                 className="strike-arena-menu-button"
                 type="button"
-                onClick={() => navigate(backPath, { replace: true })}
+                onClick={() => navigate(-1)}
               >KEMBALI KE MENU</button>
               <header className="strike-briefing-head">
                 <div className="strike-briefing-kicker">
@@ -5722,7 +5722,7 @@ const GamePage = ({
               {mobile && renderTouchControlSettings("pause")}
               <button className="strike-phase-button is-secondary" onClick={openArenaPicker}>PILIH LOKASI PERANG</button>
               <button className="strike-phase-button" onClick={() => resumeGameRef.current?.()}>LANJUT BERMAIN</button>
-              <button className="strike-phase-button is-secondary" onClick={() => navigate(backPath, { replace: true })}>KEMBALI KE MENU</button>
+              <button className="strike-phase-button is-secondary" onClick={() => navigate(-1)}>KEMBALI KE MENU</button>
             </section>
           </div>
         )}
@@ -5781,7 +5781,7 @@ const GamePage = ({
               </div>
               <button className="strike-phase-button" onClick={() => restartGameRef.current?.()}>MAIN LAGI</button>
               <button className="strike-phase-button is-secondary" onClick={openArenaPicker}>PILIH LOKASI PERANG</button>
-              <button className="strike-phase-button is-secondary" onClick={() => navigate(backPath, { replace: true })}>KEMBALI KE MENU</button>
+              <button className="strike-phase-button is-secondary" onClick={() => navigate(-1)}>KEMBALI KE MENU</button>
             </section>
           </div>
         )}
