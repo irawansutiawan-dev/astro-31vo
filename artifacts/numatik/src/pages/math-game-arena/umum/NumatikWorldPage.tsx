@@ -5877,8 +5877,18 @@ const NumatikWorldPage = ({
         .world-mobile-controls:before{position:absolute;inset:23%;border:1px solid rgba(255,255,255,.3);border-radius:50%;content:"";pointer-events:none}
         .world-stick-knob{position:absolute;left:50%;top:50%;width:48px;height:48px;transform:translate(-50%,-50%);border:2px solid rgba(255,255,255,.95);border-radius:50%;background:linear-gradient(145deg,rgba(119,205,255,.96),rgba(48,117,207,.96));box-shadow:0 4px 13px rgba(12,48,93,.35);pointer-events:none}
         .world-jump{position:absolute;right:20px;bottom:23px;width:64px;height:64px;border:1px solid #fff;border-radius:50%;background:linear-gradient(145deg,#ffb650,#ff7c68);color:#fff;font:800 10px var(--font-display,'Orbitron'),sans-serif;box-shadow:0 6px 18px rgba(163,84,59,.25);pointer-events:auto;touch-action:none}
-        .world-question-layer{position:absolute;inset:0;display:grid;place-items:center;padding:16px;background:rgba(37,103,145,.28);backdrop-filter:blur(5px);pointer-events:auto}
-        .world-question-card{width:min(440px,calc(100vw - 28px));padding:clamp(22px,5vw,36px);border:2px solid rgba(255,255,255,.95);border-radius:26px;background:linear-gradient(145deg,#fff,#eaf8ff);text-align:center;box-shadow:0 22px 65px rgba(22,88,128,.3)}
+        .world-question-layer{position:absolute;inset:0;display:grid;place-items:center;padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:rgba(37,103,145,.28);backdrop-filter:blur(5px);pointer-events:auto;overflow:auto}
+        .world-question-card{width:min(440px,calc(100vw - 28px));max-height:calc(100dvh - 20px);overflow:auto;padding:clamp(14px,3.5vw,36px);border:2px solid rgba(255,255,255,.95);border-radius:26px;background:linear-gradient(145deg,#fff,#eaf8ff);text-align:center;box-shadow:0 22px 65px rgba(22,88,128,.3)}
+        @media (orientation:landscape) and (max-height:600px){
+          .world-question-layer{padding:8px 12px}
+          .world-question-card{width:min(620px,calc(100vw - 24px));max-height:calc(100dvh - 16px);padding:12px 20px;border-radius:18px}
+          .world-question-kicker{font-size:8px}
+          .world-question-title{margin:5px 0;font-size:clamp(16px,3.5vw,22px)}
+          .world-question-prompt{margin:7px 0 11px;font-size:clamp(26px,7vw,42px)}
+          .world-answer-grid{gap:7px}
+          .world-answer{min-height:42px;font-size:clamp(15px,2.8vw,19px)}
+          .world-feedback{min-height:18px;margin-top:7px;font-size:11px}
+        }
         .world-question-kicker{display:flex;justify-content:center;align-items:center;gap:7px;color:#229b83;font:800 10px var(--font-display,'Orbitron'),sans-serif;letter-spacing:.12em}
         .world-question-title{margin:12px 0;color:#315d87;font:900 clamp(21px,5vw,28px) var(--font-display,'Orbitron'),sans-serif}
         .world-question-prompt{margin:14px 0 22px;color:#3672cb;font:900 clamp(38px,9vw,54px) var(--font-display,'Orbitron'),sans-serif}
