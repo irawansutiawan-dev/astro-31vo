@@ -75,7 +75,9 @@
       "label": "TUGAS-LATIHAN MANDIRI",
       "desc": "Latihan soal per topik"
     },
-    "gameArena": {
+"gameArena": {
+      "numatikWorld": "NUMATIK WORLD",
+      "numatikStrike": "NUMATIK STRIKE",
       "label": "MATH GAME ARENA SMP",
       "desc": "Bermain game matematika interaktif untuk SMP"
     },

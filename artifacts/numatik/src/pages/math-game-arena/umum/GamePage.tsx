@@ -3737,9 +3737,10 @@ const GamePage = ({
         const fovChanged = baseCameraFov !== nextFov;
         const nextPixelRatio = getQualityPixelRatio(qualityRef.current);
         const pixelRatioChanged = renderer.getPixelRatio() !== nextPixelRatio;
-        if (!sizeChanged && !fovChanged && !pixelRatioChanged) return;
+        // Mobile browsers can report the old canvas buffer for one frame after rotation.
+        // Always resync the drawing buffer and projection on orientation/viewport changes.
         baseCameraFov = nextFov;
-        if (sizeChanged) camera.aspect = width / height;
+        if (sizeChanged || fovChanged) camera.aspect = width / height;
         if (!aimingRef.current) camera.fov = baseCameraFov;
         camera.updateProjectionMatrix();
         renderer.setPixelRatio(nextPixelRatio);
@@ -5632,7 +5633,7 @@ const GamePage = ({
               <button
                 className="strike-arena-menu-button"
                 type="button"
-                onClick={() => navigate(backPath)}
+                onClick={() => navigate(backPath, { replace: true })}
               >KEMBALI KE MENU</button>
               <header className="strike-briefing-head">
                 <div className="strike-briefing-kicker">
@@ -5721,7 +5722,7 @@ const GamePage = ({
               {mobile && renderTouchControlSettings("pause")}
               <button className="strike-phase-button is-secondary" onClick={openArenaPicker}>PILIH LOKASI PERANG</button>
               <button className="strike-phase-button" onClick={() => resumeGameRef.current?.()}>LANJUT BERMAIN</button>
-              <button className="strike-phase-button is-secondary" onClick={() => navigate(backPath)}>KEMBALI KE MENU</button>
+              <button className="strike-phase-button is-secondary" onClick={() => navigate(backPath, { replace: true })}>KEMBALI KE MENU</button>
             </section>
           </div>
         )}
@@ -5780,7 +5781,7 @@ const GamePage = ({
               </div>
               <button className="strike-phase-button" onClick={() => restartGameRef.current?.()}>MAIN LAGI</button>
               <button className="strike-phase-button is-secondary" onClick={openArenaPicker}>PILIH LOKASI PERANG</button>
-              <button className="strike-phase-button is-secondary" onClick={() => navigate(backPath)}>KEMBALI KE MENU</button>
+              <button className="strike-phase-button is-secondary" onClick={() => navigate(backPath, { replace: true })}>KEMBALI KE MENU</button>
             </section>
           </div>
         )}

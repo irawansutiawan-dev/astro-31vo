@@ -17,12 +17,12 @@ import Starfield from "@/components/Starfield";
 import PageNavigation from "@/components/PageNavigation";
 import { playPopSound } from "@/hooks/useAudio";
 import { SecureExamBadge, SecureExamDialog, useSecureExam } from "@/components/tka/SecureExamGuard";
-import TkaOtpVerification from "@/components/tka/TkaOtpVerification";
 import {
   saveTkaExamAnswer,
   startTkaExamSession,
   submitTkaExamSession,
   reportTkaExamViolation,
+  requestTkaExamAccess,
   TkaExamApiError,
   type TkaExamResult,
   type TkaSessionCredentials,
@@ -450,16 +450,15 @@ const TKATryOut1Page = () => {
       setSubmissionError("Nama lengkap dan asal sekolah wajib diisi.");
       return;
     }
-    if (!preAuthToken) {
-      setSubmissionError(
-        language === "en"
-          ? "Verify your Google account and email OTP before starting."
-          : language === "ja"
-            ? "開始前にGoogleアカウントとメールOTPを認証してください。"
-            : "Verifikasi akun Google dan kode OTP email sebelum memulai try out.",
-      );
+  if (!preAuthToken) {
+    try {
+      const access = await requestTkaExamAccess(1);
+      setPreAuthToken(access.preAuthToken);
+    } catch (error) {
+      setSubmissionError(error instanceof Error ? error.message : "Akses aman gagal dibuat.");
       return;
     }
+  }
     setSubmissionError("");
     await security.requestExamFullscreen();
     setCountdown(3);
@@ -586,11 +585,9 @@ const TKATryOut1Page = () => {
                     />
                   </label>
                 </div>
-                <TkaOtpVerification
-                  language={language}
-                  packageNumber={1}
-                  onVerified={setPreAuthToken}
-                />
+                <p className="mt-4 rounded-xl border border-cyan-300/15 bg-cyan-300/5 px-4 py-3 text-xs leading-relaxed text-cyan-100/75">
+                  Akses aman dibuat otomatis oleh server saat tombol mulai ditekan. Tidak diperlukan Google Authenticator atau OTP.
+                </p>
                 {submissionError && <p className="mt-3 text-xs font-semibold text-rose-300">{submissionError}</p>}
                 <div className="mt-6 flex flex-col gap-2 sm:flex-row">
                   <button
@@ -601,7 +598,7 @@ const TKATryOut1Page = () => {
                   </button>
                   <button
                     onClick={startExam}
-                    disabled={!preAuthToken}
+                    disabled={startingSessionRef.current}
                     className="inline-flex flex-[2] items-center justify-center gap-2 rounded-xl bg-emerald-500/20 px-4 py-3.5 text-sm font-bold text-emerald-100 ring-1 ring-emerald-300/40 transition hover:bg-emerald-500/30 disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     Mulai Try Out <ChevronRight className="h-4 w-4" />
