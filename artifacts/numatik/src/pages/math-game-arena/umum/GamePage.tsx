@@ -3744,8 +3744,9 @@ const GamePage = ({
         if (!aimingRef.current) camera.fov = baseCameraFov;
         camera.updateProjectionMatrix();
         renderer.setPixelRatio(nextPixelRatio);
-        renderer.setSize(width, height, false);
-      });
+    // Match NUMATIK WORLD: update both the WebGL buffer and canvas CSS size after rotation.
+    renderer.setSize(width, height);
+  });
     };
     const onKeyDown = (event: KeyboardEvent) => {
       keys.current[event.code] = true;
