@@ -96,7 +96,7 @@ const TentangAplikasiPage = () => {
               <div className="flex-1">
                 <p className="font-display text-xs font-bold tracking-widest uppercase text-cyan-400 mb-0.5">{t("tentang.versionLabel")}</p>
                 <p className="font-display text-lg font-black text-white">
-                  Numatik Versi 2.1
+                  Numatik Versi 2.2
                 </p>
                 <p className="text-white/50 font-body text-xs mt-0.5">{t("tentang.versionUpdateNote")}</p>
               </div>
