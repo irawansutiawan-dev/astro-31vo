@@ -5291,9 +5291,13 @@ const GamePage = ({
            .strike-reload{right:88px;bottom:94px;width:58px;height:44px}
            .strike-switch{right:152px;bottom:94px;width:58px;height:44px}
            .strike-sprint{left:145px;bottom:29px;width:62px;height:54px}
-            .strike-turn{right:14px;width:58px;height:44px}
-         }
-         @media(max-width:380px){
+  .strike-turn{right:14px;width:58px;height:44px}
+  }
+  @media (orientation: landscape) and (max-height: 700px){
+    .strike-radar{top:14px;right:14px;width:72px;height:72px}
+    .strike-radar-label{font-size:6px}
+  }
+  @media(max-width:380px){
            .strike-logo{width:46px;height:14px}
            .strike-brand{gap:5px}
            .strike-title{font-size:9px}
