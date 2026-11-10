@@ -5306,7 +5306,7 @@ const GamePage = ({
          @media(orientation:landscape) and (max-height:500px){
            .strike-stick{left:max(12px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));width:100px;height:100px}
          }
-        @media(orientation:landscape) and (max-height:700px){.strike-phase-layer{padding:6px 10px}.strike-phase-card:not(.is-arena-picker){width:min(500px,calc(100% - 20px));max-height:calc(100% - 12px);padding:10px 14px;border-radius:16px}.strike-question-kicker{font-size:8px}.strike-phase-title{margin:4px 0;font-size:clamp(15px,3.2vw,20px)}.strike-math-question{margin:5px 0 8px;font-size:clamp(22px,6vw,34px)}.strike-answer-grid{gap:6px}.strike-answer-button{min-height:36px;padding:6px;font-size:clamp(13px,2.4vw,17px)}.strike-feedback{min-height:14px;margin-top:5px;font-size:10px}}
+        @media(orientation:landscape) and (max-height:700px){.strike-phase-layer{padding:6px 10px}.strike-phase-card:not(.is-arena-picker){width:min(420px,calc(100% - 20px));max-height:calc(100% - 12px);padding:6px 10px;border-radius:14px;overflow:hidden}.strike-question-kicker{font-size:8px}.strike-phase-title{margin:4px 0;font-size:clamp(15px,3.2vw,20px)}.strike-math-question{margin:3px 0 5px;font-size:clamp(18px,4.8vw,28px)}.strike-answer-grid{gap:6px}.strike-answer-button{min-height:30px;padding:4px 6px;font-size:clamp(12px,2.1vw,15px)}.strike-feedback{min-height:14px;margin-top:5px;font-size:10px}}
         @media(prefers-reduced-motion:reduce){.strike-lock{transition:none}.strike-phase-card.is-treasure-results,.strike-result-chest.is-earned{animation:none}}
       `}</style>
       <div ref={mountRef} className="absolute inset-0" />
