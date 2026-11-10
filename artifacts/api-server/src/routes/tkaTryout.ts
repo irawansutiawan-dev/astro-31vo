@@ -9,7 +9,7 @@ const connectors = new ReplitConnectors();
 
 const SPREADSHEET_ID = "1FNUmVVqjmYrBTXF_NYhedIqUOqC-SdbVktiM4RoEQT8";
 const SPREADSHEET_URL = `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/edit`;
-const RECIPIENT_EMAIL = "numatik.app@gmail.com";
+const RECIPIENT_EMAIL = "irawansutiawan@gmail.com";
 const GOOGLE_OAUTH_CLIENT_ID =
   "671247982933-b08s3havshvpnf1mhs1dm5iimm6s341l.apps.googleusercontent.com";
 const googleOAuthClient = new OAuth2Client(

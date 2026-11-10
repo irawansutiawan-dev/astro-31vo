@@ -450,6 +450,7 @@ const TKATryOut1Page = () => {
       setSubmissionError("Nama lengkap dan asal sekolah wajib diisi.");
       return;
     }
+  await security.requestExamFullscreen();
   if (!preAuthToken) {
     try {
       const access = await requestTkaExamAccess(1);
