@@ -6046,8 +6046,8 @@ const NumatikWorldPage = ({
               <div className="world-start-top">
                 <button
                   className="world-start-back"
-                  onClick={() => avatarPickerOpen ? navigate(-1) : setAvatarPickerOpen(true)}
-                  aria-label={avatarPickerOpen ? "Kembali ke pilihan game" : "Kembali ke pemilihan avatar"}
+                  onClick={() => navigate(-1)}
+                  aria-label="Kembali ke halaman sebelumnya"
                 >
                   <ArrowLeft size={15} /> {avatarPickerOpen ? "MENU" : "PILIH AVATAR"}
                 </button>
