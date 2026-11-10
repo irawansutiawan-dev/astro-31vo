@@ -5293,8 +5293,8 @@ const GamePage = ({
            .strike-sprint{left:145px;bottom:29px;width:62px;height:54px}
   .strike-turn{right:14px;width:58px;height:44px}
   }
-  @media (orientation: landscape) and (max-height: 700px){
-    .strike-radar{top:14px;right:14px;width:72px;height:72px}
+@media (orientation: landscape) and (max-height: 700px){
+ .strike-radar{top:82px;right:14px;width:72px;height:72px}
     .strike-radar-label{font-size:6px}
   }
   @media(max-width:380px){
