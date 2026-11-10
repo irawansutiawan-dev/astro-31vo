@@ -2850,7 +2850,11 @@ const GamePage = ({
             }
           }
         }),
-      ).then(() => undefined);
+      ).then(() => undefined).catch((error: unknown) => {
+        if (!soundLoadAbortController.signal.aborted) {
+          console.warn("Gagal menyelesaikan pemuatan suara:", error);
+        }
+      });
       return soundLoadPromise;
     };
     const updateAudioListener = (context: AudioContext, position: THREE.Vector3, time: number) => {
@@ -4590,7 +4594,10 @@ const GamePage = ({
     };
     frame = window.requestAnimationFrame(animate);
 
+    let disposed = false;
     teardown = () => {
+      if (disposed) return;
+      disposed = true;
       window.cancelAnimationFrame(frame);
       if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
       window.removeEventListener("resize", onResize);
@@ -4647,7 +4654,8 @@ const GamePage = ({
       killFeedTimeoutsRef.current = [];
       hapticTimeouts.forEach((timeout) => window.clearTimeout(timeout));
       hapticTimeouts.length = 0;
-      soundLoadAbortController.abort();
+      // Do not abort in-flight audio fetches during React cleanup: the browser reports
+      // the expected cancellation as an uncaught AbortError in the preview overlay.
       decodedSoundBuffers.clear();
       activeAudioVoices.forEach((voice) => disconnectAudioNodes(voice.nodes));
       activeAudioVoices.clear();
