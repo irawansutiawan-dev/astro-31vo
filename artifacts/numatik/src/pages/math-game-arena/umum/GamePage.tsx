@@ -609,8 +609,9 @@ const GamePage = ({
     const initialFog = QUALITY_FOG[qualityRef.current];
     scene.background = new THREE.Color(arena.horizon);
     scene.fog = new THREE.Fog(arena.horizon, initialFog.near, initialFog.far);
-    let baseCameraFov = window.matchMedia("(pointer: coarse) and (orientation: landscape)").matches ? 84 : 72;
+    let baseCameraFov = window.matchMedia("(orientation: landscape)").matches ? 84 : 72;
     const camera = new THREE.PerspectiveCamera(baseCameraFov, host.clientWidth / Math.max(host.clientHeight, 1), 0.1, 180);
+    const rendererSize = new THREE.Vector2();
     const player = new THREE.Group();
     player.position.set(0, 1.65, 51);
     scene.add(player);
@@ -3721,14 +3722,29 @@ const GamePage = ({
     fireRef.current = fire;
     swapWeaponRef.current = swapWeapon;
     reloadWeaponRef.current = reload;
+    let resizeFrame = 0;
     const onResize = () => {
-      if (!host.clientWidth || !host.clientHeight) return;
-      camera.aspect = host.clientWidth / host.clientHeight;
-      baseCameraFov = window.matchMedia("(pointer: coarse) and (orientation: landscape)").matches ? 84 : 72;
-      if (!aimingRef.current) camera.fov = baseCameraFov;
-      camera.updateProjectionMatrix();
-      renderer.setSize(host.clientWidth, host.clientHeight, false);
-      renderer.setPixelRatio(getQualityPixelRatio(qualityRef.current));
+      if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
+      resizeFrame = window.requestAnimationFrame(() => {
+        resizeFrame = 0;
+        const bounds = host.getBoundingClientRect();
+        const width = Math.round(bounds.width);
+        const height = Math.round(bounds.height);
+        if (!width || !height) return;
+        renderer.getSize(rendererSize);
+        const sizeChanged = rendererSize.x !== width || rendererSize.y !== height;
+        const nextFov = window.matchMedia("(orientation: landscape)").matches ? 84 : 72;
+        const fovChanged = baseCameraFov !== nextFov;
+        const nextPixelRatio = getQualityPixelRatio(qualityRef.current);
+        const pixelRatioChanged = renderer.getPixelRatio() !== nextPixelRatio;
+        if (!sizeChanged && !fovChanged && !pixelRatioChanged) return;
+        baseCameraFov = nextFov;
+        if (sizeChanged) camera.aspect = width / height;
+        if (!aimingRef.current) camera.fov = baseCameraFov;
+        camera.updateProjectionMatrix();
+        renderer.setPixelRatio(nextPixelRatio);
+        renderer.setSize(width, height, false);
+      });
     };
     const onKeyDown = (event: KeyboardEvent) => {
       keys.current[event.code] = true;
@@ -3813,8 +3829,11 @@ const GamePage = ({
       if (gamePhaseRef.current === "combat") pauseGame();
     };
     window.addEventListener("resize", onResize);
+    window.addEventListener("orientationchange", onResize);
+    window.visualViewport?.addEventListener("resize", onResize);
     const resizeObserver = new ResizeObserver(onResize);
     resizeObserver.observe(host);
+    onResize();
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     document.addEventListener("pointerlockchange", onLockChange);
@@ -4571,7 +4590,10 @@ const GamePage = ({
 
     teardown = () => {
       window.cancelAnimationFrame(frame);
+      if (resizeFrame) window.cancelAnimationFrame(resizeFrame);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("orientationchange", onResize);
+      window.visualViewport?.removeEventListener("resize", onResize);
       resizeObserver.disconnect();
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
@@ -5006,7 +5028,7 @@ const GamePage = ({
   return (
     <main className="strike-page">
       <style>{`
-        .strike-page{position:relative;width:100%;height:100dvh;min-height:100dvh;overflow:hidden;background:#07101d;color:#e9f6ff;font-family:var(--font-body,'Exo 2'),sans-serif;isolation:isolate}
+        .strike-page{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;min-height:0;overflow:hidden;background:#07101d;color:#e9f6ff;font-family:var(--font-body,'Exo 2'),sans-serif;isolation:isolate}
         .strike-canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}
         .strike-render-error{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.55rem;padding:2rem;color:#b7d8e5;text-align:center}
         .strike-render-error small{max-width:min(80vw,720px);color:#7895a4;font:400 11px/1.5 var(--font-body,'Exo 2'),sans-serif;overflow-wrap:anywhere}
