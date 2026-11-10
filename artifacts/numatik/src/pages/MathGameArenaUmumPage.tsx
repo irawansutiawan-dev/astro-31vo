@@ -15,6 +15,18 @@ const MathGameArenaUmumPage = () => {
 
   const games = [
     {
+      slug: "numatikWorld",
+      emoji: "🌍",
+      path: "/math-game-arena/umum/numatik-world",
+      icon: <Gamepad2 className="w-8 h-8 text-accent shrink-0 group-hover:scale-110 transition-transform" />,
+    },
+    {
+      slug: "numatikStrike",
+      emoji: "🎯",
+      path: "/math-game-arena/umum/numatik-strike",
+      icon: <Crosshair className="w-8 h-8 text-accent shrink-0 group-hover:scale-110 transition-transform" />,
+    },
+    {
       slug: "balapMobil",
       emoji: "🏎️",
       path: "/math-game-arena/umum/balap-mobil",

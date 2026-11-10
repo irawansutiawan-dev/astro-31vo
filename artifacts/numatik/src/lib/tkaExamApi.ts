@@ -58,6 +58,14 @@ const post = async <T>(url: string, body: Record<string, unknown>): Promise<T> =
   return data as T;
 };
 
+export const requestTkaExamAccess = async (packageNumber: 1 | 2) => {
+  const deviceId = await getTkaDeviceId();
+  return post<{ ok: true; preAuthToken: string }>(
+    `/api/tka/tryout/${packageNumber}/access`,
+    { deviceId },
+  );
+};
+
 export const startTkaExamSession = async (
   packageNumber: 1 | 2,
   preAuthToken: string,

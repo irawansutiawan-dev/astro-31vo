@@ -701,6 +701,35 @@ router.post("/tka/tryout/:packageNumber/otp/verify", async (req, res) => {
   }
 });
 
+router.post("/tka/tryout/:packageNumber/access", async (req, res) => {
+  const packageNumber = packageNumberFrom(req.params.packageNumber);
+  const body = req.body as RequestBody;
+  const deviceId = textValue(body.deviceId, 128);
+  if (!packageNumber || !deviceId) {
+    res.status(400).json({ ok: false, message: "Perangkat ujian tidak valid." });
+    return;
+  }
+
+  const email = `device-${sha256(deviceId).slice(0, 32)}@numatik.local`;
+  const duplicate = await pool.query(
+    `SELECT 1 FROM tka_exam_sessions
+     WHERE package_number = $1 AND device_id = $2 AND status IN ('active', 'submitted') LIMIT 1`,
+    [packageNumber, deviceId],
+  );
+  if (duplicate.rowCount) {
+    res.status(409).json({ ok: false, code: "DUPLICATE_SUBMISSION", message: "Perangkat ini sudah pernah mengikuti try out." });
+    return;
+  }
+
+  const preAuthToken = randomBytes(32).toString("base64url");
+  await pool.query(
+    `INSERT INTO tka_otp_challenges (id, package_number, email, code_hash, expires_at, verified_at, pre_auth_hash, pre_auth_expires_at)
+     VALUES ($1, $2, $3, $4, NOW() + INTERVAL '5 minutes', NOW(), $5, NOW() + INTERVAL '5 minutes')`,
+    [randomUUID(), packageNumber, email, sha256(randomBytes(32).toString("base64url")), sha256(preAuthToken)],
+  );
+  res.json({ ok: true, preAuthToken });
+});
+
 router.post("/tka/tryout/:packageNumber/session/start", async (req, res) => {
   const packageNumber = packageNumberFrom(req.params.packageNumber);
   const body = req.body as RequestBody;
@@ -713,7 +742,7 @@ router.post("/tka/tryout/:packageNumber/session/start", async (req, res) => {
     return;
   }
   if (!preAuthToken || !name || !school || !deviceId) {
-    res.status(400).json({ message: "Verifikasi OTP, biodata, dan device ID wajib tersedia." });
+    res.status(400).json({ message: "Token akses aman, biodata, dan device ID wajib tersedia." });
     return;
   }
 
