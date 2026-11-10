@@ -5134,17 +5134,17 @@ const GamePage = ({
         .strike-lock:hover{background:rgba(17,67,82,.88);border-color:#72f0f5}
          .strike-back{pointer-events:auto;display:inline-flex;align-items:center;gap:7px;border:1px solid rgba(144,203,218,.24);background:rgba(5,16,28,.68);color:#c6e2ea;padding:9px 12px;font:600 9px var(--font-display,'Orbitron'),sans-serif;letter-spacing:.08em;cursor:pointer}
          .strike-back:hover{border-color:rgba(60,220,233,.55);color:#e9fbff}
-         .strike-phase-layer{position:absolute;z-index:6;inset:0;display:grid;place-items:center;padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:rgba(3,10,18,.78);backdrop-filter:blur(7px);pointer-events:auto;overflow:auto}
-         .strike-phase-card{width:min(520px,calc(100vw - 28px));max-height:calc(100dvh - 20px);overflow:auto;padding:clamp(14px,3.5vw,38px);border:1px solid rgba(92,220,230,.38);background:linear-gradient(145deg,rgba(9,28,42,.98),rgba(6,14,27,.98));box-shadow:0 24px 90px rgba(0,0,0,.42);text-align:center}
+         .strike-phase-layer{position:absolute;z-index:6;inset:0;display:grid;place-items:center;padding:max(10px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(10px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));background:rgba(3,10,18,.78);backdrop-filter:blur(7px);pointer-events:auto;overflow:auto;overscroll-behavior:contain}
+         .strike-phase-card{box-sizing:border-box;width:min(520px,calc(100% - 28px));max-height:calc(100% - 20px);overflow:auto;padding:clamp(14px,3.5vw,38px);border:1px solid rgba(92,220,230,.38);background:linear-gradient(145deg,rgba(9,28,42,.98),rgba(6,14,27,.98));box-shadow:0 24px 90px rgba(0,0,0,.42);text-align:center}
          @media (orientation:landscape) and (max-height:600px){
            .strike-phase-layer{padding:8px 12px}
-           .strike-phase-card{width:min(760px,calc(100vw - 24px));max-height:calc(100dvh - 16px);padding:12px 20px}
+           .strike-phase-card{width:min(760px,calc(100% - 24px));max-height:calc(100% - 16px);padding:12px 20px}
            .strike-phase-kicker{font-size:8px}
            .strike-phase-title{margin:6px 0;font-size:clamp(17px,3.5vw,24px)}
            .strike-phase-copy{margin:6px auto 10px;font-size:11px;line-height:1.35}
            .strike-math-question{margin:8px 0;font-size:clamp(24px,6vw,42px);line-height:1.08}
            .strike-answer-grid{gap:7px}
-           .strike-answer{min-height:42px;padding:8px;font-size:clamp(14px,2.6vw,18px)}
+           .strike-answer-button{min-height:42px;padding:8px;font-size:clamp(14px,2.6vw,18px)}
            .strike-supply-result{min-height:18px;margin:7px 0;font-size:11px}
          }
          .strike-phase-card.is-treasure-results{position:relative;border-color:rgba(255,215,112,.7);background:radial-gradient(ellipse at 50% -10%,rgba(211,151,60,.2),transparent 48%),linear-gradient(150deg,rgba(13,31,45,.99),rgba(6,14,27,.99));box-shadow:0 0 0 1px rgba(255,215,112,.12),0 0 48px rgba(225,166,63,.13),0 24px 90px rgba(0,0,0,.58);animation:str-result-arrive .55s cubic-bezier(.18,.8,.24,1) both}
