@@ -609,7 +609,8 @@ const GamePage = ({
     const initialFog = QUALITY_FOG[qualityRef.current];
     scene.background = new THREE.Color(arena.horizon);
     scene.fog = new THREE.Fog(arena.horizon, initialFog.near, initialFog.far);
-    const camera = new THREE.PerspectiveCamera(72, host.clientWidth / Math.max(host.clientHeight, 1), 0.1, 180);
+    let baseCameraFov = window.matchMedia("(pointer: coarse) and (orientation: landscape)").matches ? 84 : 72;
+    const camera = new THREE.PerspectiveCamera(baseCameraFov, host.clientWidth / Math.max(host.clientHeight, 1), 0.1, 180);
     const player = new THREE.Group();
     player.position.set(0, 1.65, 51);
     scene.add(player);
@@ -3723,6 +3724,8 @@ const GamePage = ({
     const onResize = () => {
       if (!host.clientWidth || !host.clientHeight) return;
       camera.aspect = host.clientWidth / host.clientHeight;
+      baseCameraFov = window.matchMedia("(pointer: coarse) and (orientation: landscape)").matches ? 84 : 72;
+      if (!aimingRef.current) camera.fov = baseCameraFov;
       camera.updateProjectionMatrix();
       renderer.setSize(host.clientWidth, host.clientHeight, false);
       renderer.setPixelRatio(getQualityPixelRatio(qualityRef.current));
@@ -3810,6 +3813,8 @@ const GamePage = ({
       if (gamePhaseRef.current === "combat") pauseGame();
     };
     window.addEventListener("resize", onResize);
+    const resizeObserver = new ResizeObserver(onResize);
+    resizeObserver.observe(host);
     window.addEventListener("keydown", onKeyDown);
     window.addEventListener("keyup", onKeyUp);
     document.addEventListener("pointerlockchange", onLockChange);
@@ -4111,8 +4116,8 @@ const GamePage = ({
       player.position.set(0, 1.65, 51);
       player.rotation.set(0, 0, 0);
       camera.rotation.set(0, 0, 0);
-      camera.fov = 72;
-      cameraFovRef.current = 72;
+      camera.fov = baseCameraFov;
+      cameraFovRef.current = baseCameraFov;
       camera.updateProjectionMatrix();
       cameraRecoil = 0;
       aimBlend = 0;
@@ -4463,7 +4468,7 @@ const GamePage = ({
       player.rotation.y = yaw;
       const aimTarget = aimingRef.current && !sprintActive ? 1 : 0;
       aimBlend += (aimTarget - aimBlend) * (1 - Math.exp(-dt * 13));
-      const targetFov = THREE.MathUtils.lerp(72, 46, aimBlend);
+      const targetFov = THREE.MathUtils.lerp(baseCameraFov, 46, aimBlend);
       if (Math.abs(camera.fov - targetFov) > 0.03) {
         camera.fov = targetFov;
         camera.updateProjectionMatrix();
@@ -4567,6 +4572,7 @@ const GamePage = ({
     teardown = () => {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("resize", onResize);
+      resizeObserver.disconnect();
       window.removeEventListener("keydown", onKeyDown);
       window.removeEventListener("keyup", onKeyUp);
       window.removeEventListener("mouseup", onMouseUp);
