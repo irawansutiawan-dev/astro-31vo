@@ -2729,8 +2729,7 @@ const GamePage = ({
     type PendingAudioSource = { source: AudioScheduledSourceNode; startsAt: number; stopsAt: number };
     const activeAudioVoices = new Set<ActiveAudioVoice>();
     const decodedSoundBuffers = new Map<StrikeSoundBufferKey, AudioBuffer>();
-    const soundLoadAbortController = new AbortController();
-    let enemyBreathBuffer: AudioBuffer | null = null;
+      let enemyBreathBuffer: AudioBuffer | null = null;
     let gunNoiseBuffer: AudioBuffer | null = null;
     let gunImpulseBuffer: AudioBuffer | null = null;
     let compressor: DynamicsCompressorNode | null = null;
@@ -2838,22 +2837,18 @@ const GamePage = ({
         (Object.entries(STRIKE_SOUND_FILES) as Array<[StrikeSoundBufferKey, string]>).map(async ([key, filename]) => {
           const soundPath = `${import.meta.env.BASE_URL}sounds/${filename}`;
           try {
-            const response = await fetch(soundPath, { signal: soundLoadAbortController.signal });
+            const response = await fetch(soundPath);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const encodedAudio = await response.arrayBuffer();
             const decodedAudio = await context.decodeAudioData(encodedAudio);
             decodedSoundBuffers.set(key, decodedAudio);
             console.log("loaded sound buffer", filename);
           } catch (error) {
-            if (!soundLoadAbortController.signal.aborted) {
-              console.warn(`File suara ${filename} gagal dimuat; memakai suara sintesis.`, error);
-            }
+  console.warn(`File suara ${filename} gagal dimuat; memakai suara sintesis.`, error);
           }
         }),
       ).then(() => undefined).catch((error: unknown) => {
-        if (!soundLoadAbortController.signal.aborted) {
-          console.warn("Gagal menyelesaikan pemuatan suara:", error);
-        }
+  console.warn("Gagal menyelesaikan pemuatan suara:", error);
       });
       return soundLoadPromise;
     };
@@ -2890,7 +2885,7 @@ const GamePage = ({
         const soundFiles = loadStrikeSoundFiles(context);
         if (waitForSoundFiles) {
           void soundFiles.then(() => {
-            if (!soundLoadAbortController.signal.aborted && context.state === "running") callback(context);
+            if (context.state === "running") callback(context);
           });
         } else {
           callback(context);
